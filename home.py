@@ -2,24 +2,24 @@ import openai
 import streamlit as st
 from streamlit_pills import pills
 import os
+from dotenv import load_dotenv
 
 
+st.subheader("AI Assistant : Streamlit + OpenAI: `stream` *argument*")
+selected = pills("", ["NO Streaming", "Streaming"], ["🎈", "🌈"])
+
+user_input = st.text_input("You: ", placeholder="Ask me anything ...", key="input")
 
 
 def init():
-    if "api_secret" not in st.secrets:
+    load_dotenv()
+    if "OPENAI_API_KEY" not in os.environ:
         st.error(
-            "You need to set your OpenAI API key in the secrets management page."
+            "You need to set your OpenAI API key in environment variable OPENAI_API_KEY."
         )
+        print("OPENAI_API_KEY not set in env")
         st.stop()
-    else:
-        openai.api_key = st.secrets["api_secret"]
-        os.environ["OPENAI_API_KEY"] = st.secrets["api_secret"]
     st.set_page_config(page_title="AI Assistant", page_icon="🤖", layout="wide")
-    st.subheader("AI Assistant : Streamlit + OpenAI: `stream` *argument*")
-    selected = pills("", ["NO Streaming", "Streaming"], ["🎈", "🌈"])
-
-    user_input = st.text_input("You: ", placeholder="Ask me anything ...", key="input")
 
 def main():
     init()

@@ -15,16 +15,17 @@ import pinecone
 import docx
 
 
+
 llm = OpenAI(temperature=0.5)
 sidebar = None
 
 def init():
-    if "api_secret" not in st.secrets:
-        st.error("You need to set your OpenAI API key in the secrets management page.")
-        st.stop()
-    else:
-        openai.api_key = st.secrets["api_secret"]
-        os.environ["OPENAI_API_KEY"] = st.secrets["api_secret"]
+    load_dotenv()
+    if "OPENAI_API_KEY" not in os.environ:
+        st.error(
+            "You need to set your OpenAI API key in environment variable OPENAI_API_KEY."
+        )
+        print("OPENAI_API_KEY not set in env")
     st.set_page_config(
         page_title="AI PDF-Reader Assistant", page_icon="🤖", layout="wide"
     )
@@ -33,18 +34,20 @@ def init():
     print(sidebar)
     if sidebar == "Database":
         print("using Database for documents")
-        if "pinecone_secret" not in st.secrets:
-            st.write("You need to set your pinecone API key in the secrets management page.")
+        if "PINECONE_API_KEY" not in os.environ:
+            st.write(
+            "You need to set your PINECONEAPI key in environment variable PINECONE_API_KEY "
+                    )
             st.stop()
         else:
             PINECONE_API_KEY = st.secrets["pinecone_secret"]
             PINECONE_ENV = st.secrets["pinecone_env"]
             PINECONE_INDEX = st.secrets["pinecone_index"]
             pinecone.init(
-                    api_key=PINECONE_API_KEY,  # find at app.pinecone.io
-                    environment=PINECONE_ENV  # next to api key in console
+                    api_key=os.environ['PINECONE_API_KEY'],  # find at app.pinecone.io
+                    environment=os.environ['PINECONE_ENV']  # next to api key in console
                     )
-            index_name = st.secrets['pinecone_index']
+            index_name = os.environ['PINECONE_INDEX']
     return sidebar
 
 def doc_to_text(uploaded_file):
