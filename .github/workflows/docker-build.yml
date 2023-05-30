@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: devcose/ai-helper:latest
+          tags: devcose/ai-helpers:latest
           context: .
           cache-from: type=gha
           cache-to: type=gha,mox=max
