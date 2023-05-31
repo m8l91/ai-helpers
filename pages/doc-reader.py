@@ -41,14 +41,12 @@ def init():
                     )
             st.stop()
         else:
-            PINECONE_API_KEY = os.environ["pinecone_secret"]
-            PINECONE_ENV = os.environ["pinecone_env"]
-            PINECONE_INDEX = os.environ["pinecone_index"]
+            PINECONE_API_KEY = os.environ["PINECONE_API_KEY"]
+            PINECONE_ENV = os.environ["PINECONE_ENV"]
             pinecone.init(
                     api_key=os.environ['PINECONE_API_KEY'],  # find at app.pinecone.io
                     environment=os.environ['PINECONE_ENV']  # next to api key in console
                     )
-            index_name = os.environ['PINECONE_INDEX']
     return sidebar
 
 def doc_to_text(uploaded_file):
