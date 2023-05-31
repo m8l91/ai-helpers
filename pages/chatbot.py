@@ -34,7 +34,7 @@ def count_tokens(chain, query):
 # App Framework
 # Sidebar
 # sidebar = st.sidebar.radio('Style of Post:', ['Lifestyle', "Comparison","Tech"])
-st.title("conversation")
+st.title("Chat Bot")
 with st.sidebar:
     user_input = st.text_input("User Input", key="user_input")
 

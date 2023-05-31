@@ -30,7 +30,8 @@ def init():
         page_title="AI PDF-Reader Assistant", page_icon="🤖", layout="wide"
     )
     global sidebar
-    sidebar = st.sidebar.radio('Source of Data:', ["Database", 'Upload'])
+    sidebar = st.sidebar.radio('Source of Data:', ["Upload", "Database"])
+    '# Document Helper'
     print(sidebar)
     if sidebar == "Database":
         print("using Database for documents")

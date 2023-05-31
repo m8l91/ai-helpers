@@ -1,3 +1,5 @@
+playground/*
+playground
 # creds
 apikey.py
 .streamlit/secrets.toml
