@@ -51,7 +51,7 @@ script_memory = ConversationBufferMemory(input_key="template", memory_key="chat_
 template_memory = ConversationBufferMemory(input_key="title", memory_key="template_history")
 
 # LLMS
-llm = OpenAI(verbose=True, temperature=0.9, model="text-davinci-003", max_tokens=4000)
+llm = OpenAI(verbose=True, temperature=0.9, model="text-davinci-003")
 
 title_chain = LLMChain(
     llm=llm,
@@ -59,13 +59,6 @@ title_chain = LLMChain(
     verbose=True,
     output_key="title",
     memory=title_memory,
-)
-
-conversation = ConversationChain(
-    llm=llm,
-    verbose=True,
-    output_key="conversation",
-    memory=script_memory,
 )
 
 template_chain = LLMChain(

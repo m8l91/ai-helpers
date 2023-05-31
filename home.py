@@ -5,10 +5,6 @@ import os
 from dotenv import load_dotenv
 
 
-st.subheader("AI Assistant : Streamlit + OpenAI: `stream` *argument*")
-selected = pills("", ["NO Streaming", "Streaming"], ["🎈", "🌈"])
-
-user_input = st.text_input("You: ", placeholder="Ask me anything ...", key="input")
 
 
 def init():
@@ -21,8 +17,12 @@ def init():
         st.stop()
     st.set_page_config(page_title="AI Assistant", page_icon="🤖", layout="wide")
 
+
 def main():
     init()
+    st.subheader("AI Assistant : Streamlit + OpenAI: `stream` *argument*")
+    selected = pills("", ["NO Streaming", "Streaming"], ["🎈", "🌈"])
+    user_input = st.text_input("You: ", placeholder="Ask me anything ...", key="input")
 
 
     if user_input:

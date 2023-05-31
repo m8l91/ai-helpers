@@ -40,9 +40,9 @@ def init():
                     )
             st.stop()
         else:
-            PINECONE_API_KEY = st.secrets["pinecone_secret"]
-            PINECONE_ENV = st.secrets["pinecone_env"]
-            PINECONE_INDEX = st.secrets["pinecone_index"]
+            PINECONE_API_KEY = os.environ["pinecone_secret"]
+            PINECONE_ENV = os.environ["pinecone_env"]
+            PINECONE_INDEX = os.environ["pinecone_index"]
             pinecone.init(
                     api_key=os.environ['PINECONE_API_KEY'],  # find at app.pinecone.io
                     environment=os.environ['PINECONE_ENV']  # next to api key in console
