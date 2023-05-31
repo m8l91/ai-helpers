@@ -21,8 +21,7 @@ from langchain.utilities import WikipediaAPIWrapper
 from langchain.callbacks import get_openai_callback
 import tiktoken
 
-api_key = st.secrets["api_secret"]
-os.environ["OPENAI_API_KEY"] = api_key
+api_key = os.environ["OPENAI_API_KEY"]
 
 # Count Tokens function
 def count_tokens(chain, query):

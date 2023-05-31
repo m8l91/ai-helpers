@@ -1,3 +1,4 @@
+from langchain.callbacks import get_openai_callback
 import openai
 import streamlit as st
 from streamlit_pills import pills
@@ -59,4 +60,7 @@ def main():
     st.markdown("----")
 
 if __name__ == "__main__":
-    main()
+    with get_openai_callback() as cb:
+        main()
+        st.write("Details of Generation")
+        st.write(cb)

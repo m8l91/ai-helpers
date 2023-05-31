@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 from streamlit_pills import pills
 
-openai.api_key = st.secrets['api_secret']
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 st.subheader("AI Assistant : Streamlit + OpenAI: `stream` *argument*")
 selected = pills("", ["NO Streaming", "Streaming"], ["🎈", "🌈"])
