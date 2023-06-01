@@ -103,8 +103,10 @@ def query_answer(user_input, docs):
 
 def single_file():
     # Upload File
-    uploaded_file = st.file_uploader("Upload your PDF")
-    if uploaded_file is not None:
+    with st.form("form-uploader", clear_on_submit=True):
+        uploaded_file = st.file_uploader("Compatible types PDF, docx, txt")
+        submitted = st.form_submit_button("Upload")
+    if submitted and uploaded_file is not None:
         st.write("File Uploaded")
         # Convert file to string
         string_data = doc_to_text(uploaded_file)
@@ -131,6 +133,8 @@ def get_namespaces_of_index(index):
     index= pinecone.Index(index)
     index_stats = index.describe_index_stats()
     namespaces = list(index_stats['namespaces'].keys())
+    if len(namespaces) == 0:
+        namespaces =  ["default"]
     return namespaces
     # return active_namespaces
 
@@ -170,6 +174,13 @@ def query_index():
     return docsearch
 
 
+def delete_namespace_vectors(index_name, namespace):
+    # active_indexes = pinecone.list_indexes()
+    print("Clearing vecotors in namespace" + namespace)
+    index = pinecone.Index(index_name)
+    index.delete(delete_all=True, namespace=namespace)
+
+
 @st.cache_data(show_spinner="Fetching Data from Database")
 def get_indexes():
     active_indexes = pinecone.list_indexes()
@@ -180,30 +191,41 @@ def db_fun():
     active_indexes = get_indexes()
     if active_indexes != []:
         st.write("Indexes Found")
-        selected_index = pills("Choose index", active_indexes)
+        selected_index, reload_db_button = st.columns([1,1])
+        with selected_index:
+            selected_index = pills("Choose index", active_indexes)
+        with reload_db_button:
+            if st.button("Reload DB", key="reload-db", ):
+                st.cache_data.clear()
         active_namespaces = get_namespaces_of_index(selected_index)
-        active_namespaces.append('create-new-namespace')
-        selected_namespace, new_namespace = st.columns([.5,1])
+        selected_namespace, clear_namespace, ns_form = st.columns([.5,.5,1])
         with selected_namespace:
             selected_namespace = pills("Choose space", active_namespaces)
-        if selected_namespace == 'create-new-namespace':
-            with new_namespace:
-                new_namespace = st.text_input("Create new space")
-            if new_namespace:
+        with clear_namespace:
+            if st.button("Delete Space", key="clear-space"):
+                delete_namespace_vectors(selected_index, selected_namespace)
+        # with new_namespace:
+        with ns_form:
+            with st.form("namespace-form", clear_on_submit=True):
+                new_namespace = st.text_input("Create new space", value="", key=1)
+                ns_submitted = st.form_submit_button("Create")
+
+        if ns_submitted and new_namespace is not None:
+            with st.spinner("Creating new namespace"):
                 create_namespace(selected_index, new_namespace)
                 st.cache_data.clear()
 
-        uploaded_file = st.file_uploader("Add Data to your index")
-        if uploaded_file is not None:
-            # Upload File to Index
-            string_data = doc_to_text(uploaded_file)
-            # Vectorize
-            chunks = make_chunks(string_data)
-            create_vectors(chunks, index_name=selected_index, namespace=selected_namespace)
-            # clear uploaded file
-            uploaded_file = None
-            
 
+        with st.form("form-uploader", clear_on_submit=True):    
+            uploaded_file = st.file_uploader("Compatible types PDF, docx, txt")
+            submitted = st.form_submit_button("Upload")
+        if submitted and uploaded_file is not None:
+            with st.spinner("Uploading File"):
+                # Upload File to Index
+                string_data = doc_to_text(uploaded_file)
+                # Vectorize
+                chunks = make_chunks(string_data)
+                create_vectors(chunks, index_name=selected_index, namespace=selected_namespace)
         knowledge_base = query_index()
         user_input = st.text_input("Ask a question")
         if user_input:
